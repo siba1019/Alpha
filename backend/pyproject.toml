@@ -12,14 +12,17 @@ license = { text = "MIT" }
 authors = [{ name = "Project Alpha Team" }]
 dependencies = [
     "duckdb>=1.1,<2",
+    "fastapi>=0.115,<1",
     "pydantic-settings>=2.6,<3",
     "python-dotenv>=1.0,<2",
     "structlog>=24.4,<26",
+    "uvicorn[standard]>=0.32,<1",
 ]
 
 [dependency-groups]
 dev = [
     "mypy>=1.13,<2",
+    "httpx>=0.28,<1",
     "pytest>=8.3,<9",
     "pytest-cov>=6.0,<7",
     "ruff>=0.8,<1",

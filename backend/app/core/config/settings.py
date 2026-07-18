@@ -5,6 +5,10 @@ from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.core.logging.setup import get_logger
+
+logger = get_logger(__name__)
+
 
 class Settings(BaseSettings):
     """Runtime settings for Project Alpha.

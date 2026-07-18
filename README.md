@@ -1,6 +1,6 @@
 # Project Alpha
 
-Project Alpha is a production-oriented foundation for Indian stock-market quantitative research. This repository intentionally contains **only Sprint 1 platform plumbing**: configuration, dependency boundaries, persistence, observability, quality checks, and deployment scaffolding. It contains no strategies, indicators, scanners, UI, or live market-data integrations.
+Project Alpha is a production-oriented foundation for Indian stock-market quantitative research. This repository intentionally contains **only Sprint 1 platform plumbing**: configuration, dependency boundaries, persistence, observability, a minimal health endpoint, quality checks, and deployment scaffolding. It contains no strategies, indicators, scanners, Pine Script, Chartink logic, UI, or live market-data integrations.
 
 ## Why uv
 
@@ -34,6 +34,8 @@ uv run pytest
 
 Format code with `uv run ruff format .` and fix eligible lint findings with `uv run ruff check . --fix`.
 
+For the full local workflow, troubleshooting, and the rationale behind each foundation choice, see [the developer setup guide](docs/developer-setup.md).
+
 ## Configuration
 
 Configuration is typed through `pydantic-settings`. Values are loaded from process environment and, for local development, `.env`. All variables are namespaced with `PROJECT_ALPHA_`.
@@ -63,7 +65,7 @@ backend/
     scanner/              Reserved for a future sprint
     strategies/           Reserved for a future sprint
     analytics/            Reserved for a future sprint
-    api/                  Reserved for a future sprint
+    api/                  Minimal FastAPI health endpoint
   tests/                  Unit tests organized by layer
   pyproject.toml          Backend dependency and quality configuration
 pine/                     Pine Script workspace placeholder
@@ -98,6 +100,15 @@ The adapter creates parent directories during initialization and yields a short-
 
 `configure_logging(settings.log_level)` configures JSON structured logs with an ISO-8601 UTC timestamp, log level, and context-variable support. Call it once from a future application entry point; libraries should obtain named loggers through `get_logger` and avoid configuring logging themselves.
 
+## Health Endpoint
+
+The only HTTP endpoint in Sprint 1 is `GET /health`. It returns non-sensitive application metadata and is intended for container orchestration and deployment checks. Start it locally with:
+
+```bash
+cd backend
+uv run uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+```
+
 ## Docker
 
 Build and run the foundation with:
@@ -106,7 +117,7 @@ Build and run the foundation with:
 docker compose up --build
 ```
 
-The Compose file mounts `./data` so local DuckDB files persist outside the container. Create `.env` first, as Compose reads it through `env_file`.
+The Compose file mounts `./data` so local DuckDB files persist outside the container. It loads `.env` when present; otherwise, the typed application defaults are used.
 
 ## Continuous Integration
 

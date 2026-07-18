@@ -7,6 +7,10 @@ from pathlib import Path
 import duckdb
 from duckdb import DuckDBPyConnection
 
+from app.core.logging.setup import get_logger
+
+logger = get_logger(__name__)
+
 
 class DuckDBDatabase:
     """Create short-lived DuckDB connections for an injected database location."""
@@ -25,6 +29,7 @@ class DuckDBDatabase:
         self._database_path.parent.mkdir(parents=True, exist_ok=True)
         with self.connection():
             pass
+        logger.info("database_initialized", database_path=str(self._database_path))
 
     @contextmanager
     def connection(self) -> Iterator[DuckDBPyConnection]:

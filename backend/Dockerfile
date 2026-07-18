@@ -16,4 +16,6 @@ COPY backend/app ./app
 
 RUN uv sync --locked --no-dev
 
-CMD ["/app/.venv/bin/python", "-c", "from app.core.config import Settings; print(Settings().app_name)"]
+EXPOSE 8000
+
+CMD ["/app/.venv/bin/uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
